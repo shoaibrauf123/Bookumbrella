@@ -1,0 +1,108 @@
+
+
+/*dashbord style*/
+.dashboard-stat .visual {
+    display: block;
+    float: left;
+    font-size: 35px;
+    height: 80px;
+    line-height: 35px;
+    margin-bottom: 15px;
+    padding-left: 15px;
+    padding-top: 10px;
+    width: 80px;
+}
+.dashboard-stat .details {
+    /*padding-right: 15px;
+    position: absolute;
+    right: 15px;*/
+    overflow: hidden;
+    text-align: center;
+}
+.dashboard-stat .more {
+    clear: both;
+    display: block;
+    font-size: 11px;
+    font-weight: 300;
+    opacity: 0.7;
+    padding: 6px 10px;
+    position: relative;
+    text-transform: uppercase;
+	color:#fff;
+    text-align: center;
+}
+.dashboard-stat.red-intense {
+    background-color: #e35b5a;
+}
+.dashboard-stat.blue-madison {
+    background-color: #578ebe;
+}
+.dashboard-stat.green-haze {
+    background-color: #44b6ae;
+}
+.dashboard-stat.purple-plum {
+    background-color: #8775a7;
+}
+.dashboard-stat .visual {
+    float: none;
+    font-size: 55px;
+    padding: 0;
+    border: solid 1px #fff;
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    line-height: 100px;
+    text-align: center;
+    border-radius: 50%;
+}
+.dashboard-stat .details .number {
+    font-size: 34px;
+    font-weight: 300;
+    letter-spacing: -1px;
+    line-height: 36px;
+    margin-bottom: 0;
+    padding: 10px 0;
+    /*text-align: right;*/
+}
+.dashboard-stat .details .desc {
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0;
+    /*text-align: right;*/
+}
+.dashboard-stat .details .desc a{ color: #fff; }
+.dashboard-stat {color:#fff; padding-top: 20px; padding-bottom: 20px; min-height: 245px;}
+.order_table {
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 8px #555;
+    margin-bottom: 20px;
+
+}
+.order_table h2 {
+    
+    margin: 0;
+    padding: 10px;
+}
+.dashbord_head {
+    margin-bottom: 30px;
+}
+.progress.progress_top {
+    margin-top: 15px;
+}
+.order_table > ul {
+    padding-left: 10px; padding-top:20px;
+}
+.order_table ul li{list-style:none; }
+.order_table > ul li label{width:200px; font-weight:normal;}
+@media (max-width: 800px) and (min-width: 768px) {
+.dashbord_inno {
+    left: -20px;
+    position: relative;
+}
+}
+@media (max-width: 700px) {
+
+.order_content {
+    overflow: auto;
+}	
+}

@@ -1,0 +1,60 @@
+.product-list-thumb{
+    width: 60px;
+    margin-right: 10px;
+}
+
+/* Products Import Loader Styling */
+
+.products-import-loader-cont .products-import-loading-content {
+    width: 50%;
+    background-color: white;
+    margin: 0px auto;
+    padding: 2% 1%;
+    min-height: 45vh;
+    margin-top: 20vh;
+}
+
+.products-import-loader-cont .products-import-loading-content .content-loading-msg {
+    margin-top: 40px;
+    font-size: 17px;
+    color: #7D7D7D;
+}
+
+.products-import-loader-cont .products-import-loading-content .content-loading-msg.yellow {
+    color: #EB9C20;
+}
+
+.products-import-loader-cont .products-import-loading-content .content-loading-msg.green {
+    color: #58AA89;
+}
+
+.products-import-loader-cont .products-import-loading-content .content-loading-msg.red {
+    color: #E74C3C;
+}
+
+.products-import-loader-cont .products-import-loading-content img{
+    max-width: 200px;
+    margin-top: 4%;
+}
+
+/* Cashback Info Block Display Styling */
+
+.cashback-blocks-cont .cashback-disp-block{
+    padding: 10px;
+    background-color: whitesmoke;
+}
+.cashback-blocks-cont .cashback-disp-block .block-data-title{
+    margin-top: 0 !important;
+}
+
+/* Cashback Info Block Display Styling  End */
+
+
+@media (max-width: 767px) {
+    .products-import-loader-cont .products-import-loading-content {
+        width: 100% !important;
+        min-height: 100vh !important;
+        margin-top: 0 !important;
+        padding-top: 20vh !important;
+    }
+}

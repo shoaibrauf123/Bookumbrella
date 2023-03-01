@@ -1,0 +1,386 @@
+<?php
+    $currentUserData = getUserData(getCurrentUserId());
+    $countries = $this->comman_model->get('countries');
+?>
+
+<style>
+	.importdbookstbl{
+	
+    padding: 9px !important;
+    text-align: left !important;
+    /* text-indent: 4px; */
+    vertical-align: middle !important;
+    width: 132px;	
+	}
+	.myacuntblock{
+	
+    margin: 0 2px 10px;
+    min-height: 250px;
+    padding: 0 0 8px;
+	}
+	.my-account-tab-btns
+	{
+		margin-top:20px;
+		margin-bottom:20px;
+	}
+	.my-account-tab-btns ul h2 {
+  background:#4B2354;
+    color: #ffffff !important;
+    font-size: 18px;
+    font-weight: 600;
+    margin:0 0 2px;
+    padding: 20px 0;
+    text-align: center;
+    text-shadow: 2px 2px 7px #000000;
+	}
+
+     .padding-right-20{
+        padding-right:0px !important
+    }
+
+    a#export_feedbacks {
+    color: #fff;
+    background: #bb9870;
+    padding: 5px 20px;
+    border-radius: 3px;
+    font-size: 22px;
+    transition:all .5s;
+   }
+    a#export_feedbacks:hover {
+    text-decoration:none !important;
+    background: #323232 ;
+
+    }
+
+.my-account-tab-btns ul li {
+
+    padding: 2px 0;
+    
+}
+.my-account-tab-btns ul li a {
+ background: #f9f9f9 none repeat scroll 0 0;
+    border-radius: 0;
+    color: #857d7d !important;
+    padding: 20px 15px;
+    text-shadow: 2px 3px 3px #b5b5b5;
+	 
+
+}
+.my-account-tab-btns ul li i {
+
+display: inline-block;
+    float: left;
+    font-size: 33px;
+    text-align: left;
+    
+}
+.my-account-tab-btns ul li h3 {
+   display: inline-block;
+    font-size: 13px;
+    margin: 12px 5px 3px 0;
+    text-align: left;
+	line-height:20px;
+    
+}
+.box_myaccount1
+{
+	width:20%;
+	float:left;
+}
+.box_you_order
+{
+	border-radius:5px;
+	border:solid 1px #dddddd;
+	padding:10px;
+	color:#000;
+	font-size:16px;
+}
+.box_you_order:hover
+{	
+border:solid 1px #ff5b53;
+}
+.box_you_order h2
+{
+
+	color:#000;
+	font-size:24px;
+	margin-top:0px;
+}
+a.btn.btn-primary.btn-sm {
+    color: #fff;
+    background:#bb9870 !important;
+    border:1px solid #bb9870 !important;
+    transition:0.3s;
+}
+
+a.btn.btn-primary.btn-sm:hover {
+    color: #fff;
+    background:#323232 !important;
+    border:1px solid #323232 !important;
+}
+
+
+@media (min-width: 320px) and (max-width: 800px) {
+.box_myaccount1
+{
+	width:100%;
+}	
+	
+}
+</style>
+
+<div class="col-xs-12">
+    <div class="frontend-dashboard-cont">
+        <div class="row no-padding">
+            <div class="col-sm-12 col-xs-12">
+
+                <section style="padding-bottom: 50px; padding-top: 50px;">
+
+                    <?php if (isset($errors)) { ?>
+                        <div class="alert alert-danger"> <?php print_r($errors); ?></div><?php } ?>
+                    <?php if (isset($success)) { ?>
+                        <div class="alert alert-success"> <?php print_r($success); ?></div><?php } ?>
+
+                    <!--dashbord start-->
+                    <div class="dashbord_inno">
+                        <div class="container">
+                           
+
+                            
+                          
+                            
+                            
+                            <div style="clear:both; height:30px;"></div>
+                            
+
+                            <div class="clearfix"></div>
+          			<?php
+          			
+            if($this->session->userdata('user_type')=='Seller' || $this->session->userdata('user_type')=='seller'){
+			?>
+            
+                            <div class="row">
+                                <div class="col-lg-12 co-md-12 col-sm-12">
+                                    <div class="order_table">
+                                        <div class="col-sm-12 co-md-6 col-lg-6">
+                                            <h2>My Ratings and Feedbacks -> <a href="javascript:void(0)" class="active_btn" id="export_feedbacks" onclick="export_feedbacks()">Export <i class="fa-solid fa-download"></i></a><?php //echo getlanguage('cash_outs'); ?></h2>
+										</div>
+                                        <div class="col-sm-12 co-md-4 col-lg-4" style="padding-top: 10px;">
+                                            <span style="font-size: 14px; margin-right: 10%;"><strong> Total Feedback: </strong><span id="total_feedback"></span></span>
+                                            <span style="font-size: 14px;"><strong> My Rating: </strong><span id="my_rating"></span></span>
+                                        </div>
+										<div class="col-sm-12 co-md-2 col-lg-2" style="padding-top: 10px;">
+                                            <select class="form-control" onChange="filter_feedback(this)"  id="month_filter">
+                                                <option value="">All</option>
+                                                <option  <?php if($this->input->get('months')=='1') { ?> selected <?php } ?> value="1">1 month</option>
+                                                <option <?php if($this->input->get('months')=='3') { ?> selected <?php } ?> value="3">3 months</option>
+                                                <option  <?php if($this->input->get('months')=='6') { ?> selected <?php } ?> value="6">6 months</option>
+                                                <option  <?php if($this->input->get('months')=='12') { ?> selected <?php } ?> value="12">1 year</option>
+                                            </select>
+                                        </div>
+                                        <div class="order_content">
+                                            <div class="col-lg-12 co-md-12 col-sm-12">
+                                                <table class="table history-table scrollable-table-head margin0">
+                                                    <thead class="padding-right-20">
+                                                    
+                                                    <tr>
+                                                        <th  class="importdbookstbl">Order Id<?php //echo getlanguage('cashout-id'); ?></th>
+                                                        <th  class="importdbookstbl">ISBN-10<?php //echo getlanguage('requested-at'); ?></th>
+                                                        <th  class="importdbookstbl">ISBN-13<?php //echo getlanguage('requested-at'); ?></th>
+                                                        <th  class="importdbookstbl">Title<?php //echo getlanguage('approval-at'); ?></th>
+                                                        <th  class="importdbookstbl">User<?php //echo getlanguage('get-paid-at'); ?></th>
+                                                        <th  class="importdbookstbl">Rating<?php //echo getlanguage('cashback'); ?></th>
+                                                        <th  class="importdbookstbl">Comments<?php //echo getlanguage('status'); ?></th>
+                                                        <th  class="importdbookstbl">Date<?php //echo getlanguage('status'); ?></th>
+                                                        <th  class="importdbookstbl">Action<?php //echo getlanguage('status'); ?></th>
+                                                    </tr>
+                                                    
+                                                    
+                                                    </thead>
+                                                </table>
+                                                <?php 
+                                                $avg_rating = 0;
+                                                $i=0;
+                                                if($my_ratings) { ?>
+                                                    <div class="scrollable-table-body-cont margin-bottom-20">
+                                                        <table class="table history-table scrollable-table-body table-hover">
+                                                            <tbody>
+                                                                <?php
+																 //$rating_values = array('Poor', 'Fair', 'Average', 'Good', 'Excellent');
+																foreach ($my_ratings as $row) {
+                                                                    if($row['no_stars']>=5){
+                                                                        $rating_values = 'Excellent';
+                                                                    }else if($row['no_stars']>=4){
+                                                                        $rating_values = 'Good';
+                                                                    }else if($row['no_stars']>=3){
+                                                                        $rating_values = 'Average';
+                                                                    }else if($row['no_stars']>=2){
+                                                                        $rating_values = 'Fair';
+                                                                    }else {
+                                                                        $rating_values = 'Poor';
+                                                                    }
+																$avg_rating = $avg_rating+$row['no_stars'];
+                                                                $i++;
+																$product = $this->comman_model->get("products",array("product_id"=>$row['product_id']));
+																$user = $this->comman_model->get("user",array("user_id"=>$row['user_id']));
+																$purchase = $this->comman_model->get("purchase",array("id"=>$row['order_id']));
+																?>
+                                                                 <tr>
+                                                                 <td class="importdbookstbl">
+                                                                    <?php echo $purchase[0]['unique_order_id']; ?>
+                                                                </td>
+                                                                <td class="importdbookstbl">
+                                                                    <?php echo $product[0]['isbn'];?>
+                                                                </td>
+                                                                <td class="importdbookstbl">
+                                                                    <?php echo $product[0]['isbn13'];?>
+                                                                </td>
+                                                                <td class="importdbookstbl"><?php echo $product[0]['title']; ?></td>
+                                                                <td class="importdbookstbl"><?php
+																     echo $user[0]['username'];				
+																    //echo $user[0]['first_name']." ".$user[0]['last_name']; ?>
+                                                                </td>
+                                                                <td class="importdbookstbl">
+                                                                    <?php echo $row['no_stars'].' - '.$rating_values; ?>             
+                                                                </td>
+                                                                <td class="importdbookstbl">
+                                                                    <?php echo $row['comments']; ?>
+                                                                </td>
+                                                                                
+                                                                <td class="importdbookstbl">
+                                                                    <?php echo date('Y-m-d', strtotime($row['date_created'])); ?>
+                                                                </td>               
+                                                                <td class="importdbookstbl">
+                                                                    <a href="javascript:;" id="<?php echo $row['id']?>" onClick="ShowContactBuyerModal_<?php echo $row['id']?>(<?php echo $row['id']?>)" class="btn btn-primary btn-sm" >Contact Buyer</a>
+                                                                         
+                                                                    <script>
+                                                                    function ShowContactBuyerModal_<?php echo $row['id']?>(id){ 
+                                                                    $('#ContactBuyerModal_'+id).modal('show');
+
+                                                                    }
+
+
+                                                                    </script>
+                                                                    <div id="ContactBuyerModal_<?php echo $row['id']?>" class="modal fade" role="dialog" style="z-index:999999">
+                                                                      <div class="modal-dialog">
+
+                                                                        <!-- Modal content-->
+                                                                        <div class="modal-content">
+                                                                          <div class="modal-header">
+                                                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                            <h4 class="modal-title" style="color:#0C0; font-weight:bold;" >Send Message</h4>
+                                                                          </div>
+                                                                          <div class="modal-body">
+                                                                            <div class="product-filter product_mobile" style="border:0 none;">
+                                                                            <div class="product-compare" style="color:#666;">
+                                                                                <div class="form-group">
+                                                                                    <label for="title">Subject</label>
+                                                                                    <input id="message_subject_<?php echo $row["id"]?>" class="form-control" name="title" type="text">
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="message">Message</label>
+                                                                                    <textarea class="form-control" name="message" id="body_message_<?php echo $row["id"]?>"></textarea>
+                                                                                </div> 
+                                                                                <input type="hidden" name="seller_id" id="seller_id" value="<?php echo getCurrentUserId()?>" />                                                        
+                                                                                <input type="button" class="btn btn-primary" onClick="SendMessage(<?php echo $row["user_id"]?>,<?php echo $row["id"]?>,<?php echo $row["order_id"]?>)" name="submit" id="submit" value="Send" />                                                                            
+                                                                            </div>
+                                                                            </div>
+                                                                         </div>
+                                                                        </div>
+
+                                                                      </div>
+                                                                    </div>
+                                                                </td>
+                                                                                
+                                                                </tr>  
+                                                                   
+                                                                <?php }?>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                <?php 
+                                                if($i>0){
+                                                    $avg_rating = round($avg_rating/$i,1);
+                                                }
+                                                } else { ?>
+                                                    <?php echo adminRecordNotFoundMsg(); ?>
+                                                <?php } ?>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                
+                                
+                                </div>
+                            </div>
+          			<?php
+			}
+			?>
+                        </div>
+                    </div>
+                    <!--dashbord end-->
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+$(document).ready(function(){
+    $('#total_feedback').html('<?php echo $i;?>');
+    $('#my_rating').html('<?php echo $avg_rating;?>');
+});
+ 
+ function export_feedbacks(){
+        var query_str = '';
+        
+		
+        
+        window.location.href = '<?php echo base_url('export_feedbacks'); ?>'+query_str;
+    }
+
+function filter_feedback(obj){
+    var months = $(obj).val();
+    window.location.href = '<?php echo base_url('ratings_and_feedbacks'); ?>?months='+months;
+}
+
+function SendMessage(buyer_id,id,unique_order_id){
+		    
+            var title = $("#message_subject_"+id).val();    
+            var category = $("#category_"+id).val();
+                
+            var message = $("#body_message_"+id).val();
+            if(title==""){
+                alert('Subject is empty');
+                return false;
+            }
+            if(message==""){
+                alert('Message is empty');
+                return false;
+            }
+			var r = confirm("Are you sure you want to send message?");
+			
+			if (r == true) {
+			
+					$.ajax({
+					type: "POST",
+					url: '<?php echo base_url("frontend/users/sendMessage");?>',
+					data: {order_id:unique_order_id,buyer_id:buyer_id,title:title,message:message,category:category,message_by:"Seller"},
+					success: function(data){
+						//alert(data);
+						
+						if(data == 'success'){
+						    alert("Message has been sent successfully.");
+						    location.reload();
+						}
+						
+						
+					}
+					});
+				
+			} 
+	
+		
+}
+	
+</script>

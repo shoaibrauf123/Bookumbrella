@@ -1,0 +1,329 @@
+<?php // print_r(get('store',  array('status'=>1))); ?>
+
+<div class="col-xs-12">
+  <div class="container store_listing">
+    <div class="row no-padding">
+      <div class="col-sm-12 col-xs-12">
+        <?php if(isset($errors)){?>
+        <div class="alert alert-danger" style="font-size:16px; margin-top:10px;"> <?php print_r($errors); ?></div>
+        <?php }?>
+        <?php if(isset($success)){?>
+        <div class="alert alert-success" style="font-size:16px; margin-top:10px;"> <?php print_r($success); ?></div>
+        <?php }?>
+        <div class="product-filter product_mobile">
+          <div class="product-compare"> You have <span id="total_cart_items" style="color:#ff5b53;" ><?php echo ($this->session->userdata('totalCartItems') != '')? $this->session->userdata('totalCartItems') : 0; ?></span> items for a total of <span style="color:#ff5b53;" id="checkout_top_sub_total">$<?php echo ($this->session->userdata('totalCartItems') != '')? $this->session->userdata('total') : 0; ?></span> in your basket<span style="color:#ff5b53;" >(Excluding all shipping and admin comission)</span>. </div>
+        </div>
+        <?php 
+				//echo '<pre>';print_r($this->session->userdata('cartData'));exit;
+				$cartData = $this->session->userdata("cartData");
+				//echo '<pre>';print_r($cartData);
+        if($cartData) { 
+		$standard_shipping = $this->comman_model->print_value("setting",array('slug'=>'standard_shipping'),'value');
+									$expedited_shipping = $this->comman_model->print_value("setting",array('slug'=>'expedited_shipping'),'value');
+									$second_day = $this->comman_model->print_value("setting",array('slug'=>'second_day'),'value');
+									$next_day = $this->comman_model->print_value("setting",array('slug'=>'next_day'),'value');
+									
+            $total_shipping = 0;
+			$seller_id = '';
+			$item_sub_price = 0;
+$separater_check = 0;	
+$shipping_amount_total = 0;
+$shipping_amount_subtotal = 0;
+
+
+			foreach ($cartData as $key => $value) {
+			
+				$num_sellers_inner = $this->comman_model->getSellerTotalProducts("cart_table",$inserted_ids,$value['seller_id']);
+			
+				$sellerData = $this->comman_model->get("user",array("user_id"=>$value['seller_id']));
+                $productData = get('products', array('product_id' => $value['product_id']));
+            $product_image = base_url().'/assets/frontend/img/default-cart.jpg';
+                                                    if($productData[0]['image'] != ''){
+                                                        $product_image = base_url().$productData[0]['image'];
+                                                    }
+			
+			
+			
+			//echo '<pre>';print_r($productData);exit;
+			?>
+        <div class="product-col list clearfix col-sm-12">
+          <div class="image col-sm-2">
+            <a href="<?php echo base_url('product/detail') . "/" . encode_url($productData[0]['product_id']); ?>">
+            <img class="img-responsive" alt="product" src="<?php echo $product_image; ?>"> 
+            </a>
+            </div>
+          <div class="col-xs-12 col-sm-7">
+			<div>
+            <h4><?php echo $productData[0]['title']; ?></h4>
+            <strong> Seller:</strong><span><?php echo $sellerData[0]['username']; ?></span> <br>
+            <strong> ISBN:</strong><span><?php echo $productData[0]['isbn']; ?></span> <br>
+            <strong> Quantity:</strong><span><?php echo $value['qty']; ?></span> <br>
+            <strong> Price:</strong><span style="color:#ff5b53;">$<?php echo $value['price']; ?></span><br>
+<strong> Shipping:</strong><span>
+
+
+ 							<?php 
+									
+									 $seller_shippings = $this->comman_model->get('seller_shippings',array("seller_id"=>$value['seller_id'])); 
+									 
+								$total_shipping = $total_shipping + ($value['shipping_amount']*$value['qty']);
+								
+									 
+   							if($seller_shippings[0]['expedited'] == 'active' || $seller_shippings[0]['second_day'] == 'active' || $seller_shippings[0]['next_day'] == 'active'){
+								
+								//echo '<pre>';print_r($seller_shippings);
+								
+							?>
+
+ 							<select name="shipping_aplied" id="shipping_aplied_<?php echo $value['cart_row_id']; ?>">
+                                
+                                <option <?php if($value['shipping_type'] == 'standard') {?> selected <?php } ?>  value="standard-<?php echo $standard_shipping;?>">$<?php echo $standard_shipping;?> Standard </option>
+                                
+                                
+                                
+                            <?php if($seller_shippings[0]['expedited'] == 'active'){ ?>
+                            	<option <?php if($value['shipping_type'] == 'expedited_shipping') {?> selected <?php } ?>  value="expedited_shipping-<?php echo $expedited_shipping;?>">$<?php echo $expedited_shipping;?> Expedited </option>
+                                <?php 
+								} ?>
+                            <?php if($seller_shippings[0]['second_day'] == 'active'){ ?>
+                            	<option <?php if($value['second_day'] == 'next_day') {?> selected <?php } ?>  value="second_day-<?php echo $second_day;?>">$<?php echo $second_day;?> Second day </option>
+                                <?php 
+								} ?>
+                                
+                            <?php if($seller_shippings[0]['next_day'] == 'active'){ ?>
+                            	<option <?php if($value['shipping_type'] == 'next_day') {?> selected <?php } ?> value="next_day-<?php echo $next_day;?>">$<?php echo $next_day;?> Next day</option>
+                                <?php 
+								} ?>
+                                
+                                
+                            </select>
+                            <?php }else {
+   
+   ?>
+   <input type="hidden" name="shipping_aplied_<?php echo $value['cart_row_id']; ?>" id="shipping_aplied_<?php echo $value['cart_row_id']; ?>" value="standard-<?php echo $standard_shipping;?>" />
+                                    $<?php 
+									
+   
+   
+									
+									echo $standard_shipping;
+									//$total_shipping = $total_shipping + $standard_shipping;
+									
+							?>
+                              
+                            <?php }?>*<?php echo $value['qty'];?>         
+									
+                            
+                            
+</span>
+ </div>
+          
+        </div>
+          <div class="col-xs-12 col-sm-2 pull-right">
+            <div class="cart-button button-group"> <a href="<?php echo base_url('cart/remove').'/'.$key; ?>" class="btn btn-cart btn-block" type="button">Remove</a> <br>
+              <p style="line-height:31px; color:#999; display: inline;">Quantity</p>
+              
+              <?php if($value['qty']>=10){ ?>
+              <input type="text"  class="form-control"  maxlength="5" size="3" name="new_qty" id="new_qty_<?php echo $value['cart_row_id']; ?>" value="<?php echo $value['qty']; ?>"  style="width:68px; margin-bottom:16px; float:right;" />
+              <?php
+			  }else{
+				  ?>
+				  
+                  <select maxlength="5"  id="new_qty_<?php echo $value['cart_row_id']; ?>">
+                  	<?php
+                    for($i=1;$i<=10;$i++){
+						?>
+						<option <?php if($i == $value['qty']) { ?> selected <?php  } ?> value="<?php echo $i;?>"><?php echo $i;?></option>
+						<?php
+						}
+					?>
+                  </select>
+                  
+				  <?php
+				  
+				  }
+			  ?>
+              
+              <br>
+              <button class="btn btn-cart btn-block" id="btn_update_qty" onClick="UpdateProductQty(<?php echo $value['cart_row_id']; ?>,<?php echo $value['qty']; ?>)" >Update</button>
+              <br>
+            </div>
+          </div>
+       <?php
+      if($num_sellers_inner>0){
+					  $prev_seller_id = $value['seller_id'];
+					  $item_sub_price = $item_sub_price + $value['price'];
+					  
+					  
+					  
+					 $shipping_amount_subtotal = $shipping_amount_subtotal + ($value['shipping_amount']*$value['qty']); 
+					  $separater_check++; 
+				  if( $separater_check==$num_sellers_inner){
+					   
+					 ?>
+					 <span style="color:red; float:right;"><strong>Sub Total:</strong> <?php echo $item_sub_price;?> Book Price  &nbsp; &nbsp;&nbsp;+ <?php echo $shipping_amount_subtotal;?> Shipping = $<?php echo $shipping_amount_subtotal+ $item_sub_price;?></span>
+					 <?php
+                     
+					  $num_sellers_inner =1;
+						$separater_check=0;	
+						$item_sub_price = 0;
+					$shipping_amount_subtotal = 0;	
+					}
+					 
+				  }
+				  
+				  
+	  ?>   
+      </div>
+      
+      
+      
+      <div class="listing-block-separator"></div>
+      <?php 
+	  
+	  } 
+	  $this->comman_model->deleteRecentinserted("cart_table",$inserted_ids);
+	  
+	  }else{ ?>
+      <div class="alert alert-danger" style="font-size:16px; margin-top:10px;"> Cart is empty!</div>
+      <?php } ?>
+      <div class="product-filter product_mobile">
+        
+        
+        
+		
+        <?php
+        $final_value_on_product = $this->comman_model->print_value("setting",array('slug'=>'final_value_on_product'),'value');
+		
+		if($this->session->userdata('totalCartItems')!='')
+		{
+		?>
+
+      <div class="product-compare  pull-right"> Total: 
+        
+        <span style="color:#900">
+        $<?php  
+		
+		 echo $this->session->userdata('total') + $final_value_on_product + $total_shipping; 
+		
+		?> 
+        </span>
+        
+        
+        </div>
+      
+              
+      <div class="product-compare  pull-right"> Sub Total: 
+        
+        <span style="color:#900" id="checkout_bottom_sub_total">
+        $<?php  
+		
+		 echo $this->session->userdata('total'); 
+		
+		?> 
+        </span>
+        
+        
+        </div>
+      <div class="product-compare  pull-right"> Shipping:
+      <span style="color:#900">
+      $<?php echo $total_shipping;?> 
+      </span>  
+        </div>
+
+
+
+  
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <?php /*?><div class="product-compare  pull-right"> Admin Value: 
+        
+        <span style="color:#900">
+        $<?php  
+		
+		 echo $final_value_on_product; 
+		
+		?> 
+        </span>
+        
+        
+        </div><?php */?>
+        
+
+      
+      
+      
+      <?php
+		}
+	  ?>
+      </div>
+      
+      
+      
+      
+      
+      
+      <div style="padding: 10px; text-align: center;"> <a href="<?php echo base_url('cart/purchase'); ?>" class="btn btn-cart" type="button">Paypal Checkout</a> </div>
+    </div>
+  </div>
+</div>
+</div>
+<script type="text/javascript">
+
+function UpdateProductQty(cart_row_id,org_qty){
+	var new_qty = $("#new_qty_"+cart_row_id).val();
+	var shipping = $("#shipping_aplied_"+cart_row_id).val();
+	//alert(shipping);
+	 //alert(cart_row_id + "---" + org_qty + "---" + new_qty);
+	
+	 jQuery.ajax({
+            type: "POST",
+            url: '<?php echo base_url('cart/update-qty-product'); ?>',
+            data: {'cart_row_id': cart_row_id,'org_qty':org_qty,'new_qty':new_qty,'shipping':shipping},
+            dataType: 'json',
+            error: function (request, error) {
+                alert('There is an error.Try Again');
+                //jQuery('#eventError').html('There is an error.Try Again').show();
+              },
+            success: function (response) {
+				//alert(response);return false;
+                if (response.success) {
+					
+                    $('#totalCartItems').html('('+response.totalCartItems+')');
+					$(".modal-title").html("Item quantity updated.");
+					$("#continue_shopping").html("Close");
+					$(".modal-body").css("height","165px");
+					$("#popup_checkout").hide();
+					
+					$('#checkout_top_sub_total').html('$'+response.total+'');
+					$('#checkout_bottom_sub_total').html('$'+response.total+'');					
+					$('#totalCartValue').html('('+response.total+')');
+					$('#total').html('('+response.total+')');
+                    $('#totalitems').html(response.totalCartItems+' item in cart.');
+                    $('#total_cart_items').html(response.totalCartItems+'');
+					$('#cartModal').modal('show');
+					
+					$( "#continue_shopping" ).click(function() {
+  location.reload();
+	});
+
+					
+                	 
+				}else{
+                    alert('There is an error.Try Again');
+                }
+            }
+        });//End ajax
+	
+	}
+
+
+</script> 

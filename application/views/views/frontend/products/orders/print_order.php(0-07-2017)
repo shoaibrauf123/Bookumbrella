@@ -1,0 +1,63 @@
+<?php
+//echo '<pre>'; print_r($orders); echo '</pre>';
+?>
+<style type="text/css">
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+    padding: 8px;
+}
+@page {
+    size: auto;   /* auto is the initial value */
+    margin: 0;  /* this affects the margin in the printer settings */
+}
+.header{
+	text-align: center;
+}
+</style>
+<div class="header"><h2>Bookumbrella</h2></div>        
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <?php foreach ($orders as $row) { 
+    	$user = $this->comman_model->get('user',array('user_id'=>$row['user_id']));
+		$seller = $this->comman_model->get('user',array('user_id'=>$row['seller_id']));
+		$product = $this->comman_model->get('products',array('product_id'=>$row['product_id']));
+    ?>     
+  	<tr>
+    <td>
+    	<img  width="100px" height="100px" src="<?php echo base_url()?><?php echo $product[0]['image']?>">
+   	</td>
+   	<td>
+    	<h4><?php echo $product[0]['title']?></h4>
+        <strong> ISBN:</strong><span><?php echo $product[0]['isbn']?></span><strong> SKU:</strong><span><?php echo $row['sku']?></span> <br>
+        <strong> Format:</strong><span><?php echo $product[0]['format']?></span><strong> Advertiser:</strong><span><?php echo $product[0]['advertiser_name']?></span> <br>
+        <strong> Quantity:</strong><span><?php echo $row['qty']?></span> <strong> Author:</strong><span><?php echo $product[0]['format']?></span><br>
+        <strong> Condition:</strong><span><?php echo $product[0]['book_condition']?></span> <strong> Type:</strong><span><?php echo $product[0]['book_type']?></span>
+        <br>
+        <strong>Seller: </strong><span><?php echo $seller[0]['username'];?></span>
+
+        <h3>Address Details</h3>
+        <strong> Name:</strong><span><?php echo $row['address_name']?></span>
+        <strong> Street Address:</strong><span><?php echo $row['address_street_address']?></span> <strong> City:</strong><span><?php echo $row['address_city']?></span>
+        <strong> State/Province/Region:</strong><span><?php echo $row['address_state']?></span> <strong> Zip:</strong><span><?php echo $row['address_zip']?></span>
+        <strong> Country:</strong><span><?php echo $row['address_country']?></span> 
+        <strong> Phone Number:</strong><span><?php echo $row['address_phone_number']?></span> 
+        
+   	</td>
+   	<td>
+    	<strong> Order Status: </strong><span><?php echo $row['order_status']; ?></span></br>
+       	<strong> Order Id: </strong><span><?php echo $row['unique_order_id']; ?></span></br>
+        <strong> Payment Status: </strong><span><?php echo $row['payment_status']; ?></span> <br>
+        <strong> Product Price: </strong><span><?php echo $row['price']; ?></span> <br>
+        <strong> Shipping: </strong><span>$<?php echo $row['shipping_value']; ?>(<?php echo $row['shipping_type']; ?>)</span> <br>
+        <strong> Admin Value : </strong><span><?php echo $row['final_value_on_product']; ?></span> <br>
+        <strong> Order Date : </strong><span><?php echo $row['created_on']; ?></span> <br>
+                
+        <strong> Order Total: </strong><span><?php echo $row['price'] + $row['final_value_on_product'] + $row['shipping_value']; ?></span> <br>
+   	</td>
+    </tr>
+  <?php } ?>
+  
+</table>
