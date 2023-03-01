@@ -314,6 +314,17 @@ class Api_model extends CI_Model
             return false;
         }
     }
+    public function get_all_address($id){
+        $this->db->select("*");
+        $this->db->from("addresses");
+        $this->db->where("user_id",$id);
+        $query = $this->db->get();
+        if($query){
+            return $query->result();
+        }else{
+            return false;
+        }
+    }
 
 
 

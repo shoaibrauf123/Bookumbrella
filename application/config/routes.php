@@ -421,3 +421,5 @@ $route["book_type"] = "bookumbrellaApi/book_type";
 $route["book_isbn"] = "bookumbrellaApi/book_isbn";
 $route["search"] = "bookumbrellaApi/search";
 $route["social_login"] = "bookumbrellaApi/social_login";
+$route["address"] = "bookumbrellaApi/before_payment_address";
+$route["get_address/(:any)"] = "bookumbrellaApi/get_addresses_spacific_user/$1";

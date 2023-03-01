@@ -51,50 +51,50 @@ class BookumbrellaApi extends CI_Controller
 			}
       	}
 
-      if($user_id){
+      	if($user_id){
 
-         $updated_data = array(
-             'email' => $email,
-             'country' => $country,
-             'date_updated' => date("Y-m-d H:i:s"),
+         	$updated_data = array(
+				'email' => $email,
+				'country' => $country,
+				'date_updated' => date("Y-m-d H:i:s"),
              
-         );
+         	);
 
-         if($current_pass || $new_password || $password_confirm){
+         	if($current_pass || $new_password || $password_confirm){
 
-            $havePassword = 1;
-            $user_data = $this->api_model->getUserData($user_id);
+				$havePassword = 1;
+				$user_data = $this->api_model->getUserData($user_id);
             
 
-            if($current_pass){
-            	if(md5($current_pass) == $user_data['password']){
-                  if(!$new_password){
-                     $response_msg = 'New password field is empty or have some invalid information !';
-                  }else if(!$password_confirm){
-               	   $response_msg = 'Confirmation password field is empty or have some invalid information !';
-                  }else if($new_password != $password_confirm){
-                     $response_msg = 'Confirmation password does not match with your new password !';
-                  }else{
-                     if(strlen($new_password) >= 6){
-                        $isPasswordSuccessful = 1;
-                        $updated_data = array_merge($updated_data,array('password'=>md5($new_password)));
-                     }else {
-                        $response_msg = 'Password length should not be less than 6 !';
-                     }
-                  }
-               }else{
-                  $response_msg = 'Invalid current password ! Please enter your current password to update it.';
-               }
-            }else{
-               $response_msg = 'Current password field is empty or have some invalid information !';
-            }
-         }
+            	if($current_pass){
+            		if(md5($current_pass) == $user_data['password']){
+                  		if(!$new_password){
+                     		$response_msg = 'New password field is empty or have some invalid information !';
+                 		}else if(!$password_confirm){
+               	   			$response_msg = 'Confirmation password field is empty or have some invalid information !';
+                  		}else if($new_password != $password_confirm){
+                    		$response_msg = 'Confirmation password does not match with your new password !';
+                  		}else{
+                     		if(strlen($new_password) >= 6){
+                        		$isPasswordSuccessful = 1;
+                        		$updated_data = array_merge($updated_data,array('password'=>md5($new_password)));
+                     		}else {
+                        		$response_msg = 'Password length should not be less than 6 !';
+                     		}
+                  		}
+               		}else{
+                  		$response_msg = 'Invalid current password ! Please enter your current password to update it.';
+               		}
+            	}else{
+               		$response_msg = 'Current password field is empty or have some invalid information !';
+            	}
+         	}
          /////////////////// File Image Code //////////////////////////////
-         if(!empty($fileName)){
-         	$updated_data = array_merge($updated_data,array('avatar'=>$fileName));
-         }else{
-         	$updated_data = array_merge($updated_data,array('avatar'=>$user_data['avatar']));
-         }
+			if(!empty($fileName)){
+				$updated_data = array_merge($updated_data,array('avatar'=>$fileName));
+			}else{
+				$updated_data = array_merge($updated_data,array('avatar'=>$user_data['avatar']));
+			}
 
          
                         
@@ -109,7 +109,7 @@ class BookumbrellaApi extends CI_Controller
                 $response_msg = 'Profile information successfully updated !';
                 $status = 1;
             }
-       }
+       	}
 
         if($status==1){
             echo json_encode(Array('status'=> true, 'message' => 'Successfully Updated'));
@@ -118,7 +118,7 @@ class BookumbrellaApi extends CI_Controller
             echo json_encode(Array('status'=> true, 'message' => 'Not Updated'));
         }
         //echo json_encode($response); exit;
-   }
+   	}
 
 	public function getCategory_record(){
 		$category_record = $this->api_model->getCategory();
@@ -562,14 +562,15 @@ class BookumbrellaApi extends CI_Controller
    /////////////////////////////////// book condition /////////////////////////////
    function book_condition(){
    		$data = [];
-		$select_all = $this->input->get("select_all");
+		
    		$filter = $this->input->get("book_condition");
-   		if($filter == "Used"){
-   			$data = ["Like New","Very Good","Good","Acceptable"];
-   		}elseif($filter){
-			$data = [$filter];
-		}elseif($select_all == "all_select"){
-			$data = ["New","Like New","Very Good","Good","Acceptable"];
+
+   		if($filter == "all"){
+			$data = ["New","Like New","Very Good","Good","Acceptable"];	
+   		}elseif($filter == "Used"){	
+			$data = ["Like New","Very Good","Good","Acceptable"];
+		}elseif($filter){
+			$data = [$filter];			
 		}
 		
    		$filter = $this->api_model->filter_condition("seller_products",$data);
@@ -582,10 +583,10 @@ class BookumbrellaApi extends CI_Controller
    /////////////////////////////// book type /////////////////////
    public function book_type(){
 		$data = [];
-	   	$select_all = $this->input->get("select_all");
+	   	
    		$book_type = $this->input->get("book_type");
 
-		if(!empty($select_all == "all_select")){
+		if(!empty($book_type == "all")){
 			$data = ["Internation Edition","Teachers Edition","Work Book","Library Copy","Study Guide"];
 		}elseif($book_type){
 			$data = [$book_type];	
@@ -795,9 +796,44 @@ class BookumbrellaApi extends CI_Controller
 			echo json_encode(['status'=> false, 'message' => 'Social Has been Required']);
 		}
    }
+   public function before_payment_address(){
 
+		$country_name = $this->input->post("country");
+		
+		$street_address = $this->input->post("street_address");
+		$zip = $this->input->post("zip");
+		$city = $this->input->post("city");
+		$state = $this->input->post("state");
+		$phone = $this->input->post("phone");
+		$user_id = $this->input->post("user_id");
+		
+			$address= [
+				"country" => $country_name,
+				"street_address" => $street_address,
+				"zip" => $zip,
+				"city" => $city,
+				"state" => $state,
+				"user_id" => $user_id,
+			];
+			$address_response = $this->api_model->save("addresses",$address);
+			if($address_response){
+				$user_id = $this->input->post("user_id");
+				$get_all_address = $this->api_model->get_all_address($user_id);
+				echo json_encode(["status"=>True,"message"=>"Successfull","addresses"=>$get_all_address]);
+			}else{
+				echo json_encode(["status"=>false,"message"=>"404 Error"]);
+			}
+   }
    
-
+   	public function get_addresses_spacific_user($user_id){
+				
+		$get_all_address = $this->api_model->get_all_address($user_id);
+		if($get_all_address){
+			echo json_encode(["status"=>TRUE,"message"=>"success","address"=>$get_all_address]);
+		}else{
+			echo json_encode(["status"=>false,"message"=>"404 Error"]);
+		}
+	}
 
 }
 	
